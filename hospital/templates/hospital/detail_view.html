@@ -1,0 +1,76 @@
+{% extends 'hospital/base.html' %}
+{% block title %} welcome | {{reuqest.user.first_name}} {% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="">
+            <div class="row bg-light border rounded shadow-sm m-1 p-2">
+                    <div class="col-md-4 d-flex justify-content-center">
+                            <div class="">
+                                    <div class="rounded border picture rounded-circle">
+                                                <img src="{{user_profile.photo.url}}" style="height:100%;width: 100px;" class="shadow img-cover rounded-circle" alt="">
+                                    </div>
+                            </div>
+                    </div>
+                    <div class="col-md-5 d-flex align-content-center ">
+                            <div class="mt-4">
+                                    <div class="">
+                                            <p class="m-0">Name : {{user_profile.user.first_name}} {{user_profile.user.last_name}}</p>
+                                            <small class="mt-1">username : {{user_profile.user.username}}</small>
+                                    </div>
+                            </div>
+                    </div>
+            </div>
+    </div>
+        <div class="row">
+                <div class="col-md-4">
+                        <hr>
+                                <strong>Basic Details</strong>
+                        <hr>
+                        <div class="">
+                                <div class="assign-doc">
+                                
+                                        <address class="m-0"><small class="m-0"><strong>Address :</strong> {{user_profile.address}}</small></address>                        
+                                        <p class="m-0"><small class="m-0"><strong>Email :</strong> {{user_profile.user.email}}</small></p>
+                                </div>
+                        </div>
+                </div>
+                <div class="col-md-8">
+                        <hr>
+                                <strong>Patient Details</strong>
+                        <hr>
+                        <div class="row">
+                                {% for patient in data_patient %}
+                                        <div class="col-md-6">
+                                                <div class="card border rounded p-2 shadow-sm border bg-primary bg-opacity-25 mb-2">
+                                                        <div class=" ">
+                                                                <div class="position-">
+                                                                        <div class=" picture rounded-circle text-center">
+                                                                                <img src="{{patient.photo.url}}" style="height:100%;width: 50px;" class="shadow img-cover rounded-circle" alt="">
+                                                                        </div>
+                                                                </div>
+                                                                
+                                                        </div>
+                                                                
+                                                        <div class="mt-4">
+                                                                <div class="">
+                                                                        <p class="m-0">Name : {{patient.user.first_name}} {{user_profile.user.last_name}}</p>
+                                                                        <small class="mt-1">username : {{patient.user.username}}</small>
+                                                                        <address class="m-0"><small class="m-0">Address : {{patient.address}}</small></address>                        
+                                                                        <p class="m-0"><small class="m-0">Email : {{patient.user.email}}</small></p>
+                                                                </div>
+                                                        </div>
+                                                
+                                                </div>
+                                        </div>
+                                {% endfor %}    
+
+                                
+                        </div>
+                </div>
+                
+                
+        </div>
+</div>    
+
+{% endblock %}

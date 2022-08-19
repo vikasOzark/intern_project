@@ -1,0 +1,11 @@
+patient user : rahul123
+password : vikas
+
+---------------------
+patient user : gourav123
+password : gourav
+
+--------------------
+
+doctor : rani123
+password : rani

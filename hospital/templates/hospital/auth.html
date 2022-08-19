@@ -1,0 +1,119 @@
+{% extends 'hospital/base.html' %}
+{% block title %} Authentication {% endblock %}
+
+{% block content %}
+
+    <section>
+
+        <div class="mt-5 container">
+            <div class="div m-3 text-center">
+                <h2 class="text-dark opacity-50">
+                    <strong>Welcome to Hospital Management System</strong>
+                </h2>
+            </div>
+    
+            {% if user.is_authenticated %}
+            <div class="div m-3 text-center">
+                <h4 class="text-dark opacity-50">
+                    <strong>Hi, {{ request.user }} you r already loged in .</strong>
+                </h4>
+                <a class="btn text-decoration-none bg-info text-light shadow ps-4 pe-4 pt-1 pb-1 bg-opacity-50"  href="{% url 'detail' %}" >Dashbord  <i class="bi bi-arrow-90deg-right"> </i></a>
+            </div>
+
+            {% else %}
+            <div class="center">
+                <form class="uk-grid-small" method="post" autocomplete="off" enctype="multipart/form-data" uk-grid>
+                    {% csrf_token %}
+                    <input type="hidden" name="type_auth" value="sign_up">
+                    <div class="uk-width-1-2@s">
+                        <input class="uk-input rounded-1 shadow-sm" name="first_name" type="text" placeholder="Fisrt name">
+                    </div>
+                    <div class="uk-width-1-2@s">
+                        <input class="uk-input rounded-1 shadow-sm" name="last_name" type="text" placeholder="Last name">
+                    </div>
+                    <div class="uk-width-1-2@s">
+                        <input class="uk-input rounded-1 shadow-sm" name="username" type="text" placeholder="Username">
+                    </div>
+                    <div class="uk-width-1-2@s">
+                        <input class="uk-input rounded-1 shadow-sm" name="email" type="email"  autocomplete="nofill" placeholder="Email id">
+                    </div>
+                    <div class="uk-width-1-1">
+                        <input class="uk-input rounded-1 shadow-sm" name="address" type="text" placeholder="Address">
+                    </div>
+                    
+                    <div class="uk-width-1-2@s">
+                        <input class="uk-input rounded-1 shadow-sm" name="password1" autocomplete = "new-password" type="password" placeholder="Password">
+                    </div>
+                    <div class="uk-width-1-2@s">
+                        <input class="uk-input rounded-1 shadow-sm" name="password2" type="password" placeholder="Confirm password">
+                    </div>
+                    <div class=" uk-margin mb-1 uk-width-1-1">
+                        <div uk-form-custom>
+                            <input name="profile_pic" class="uk-input" type="file">
+                            <button class="btn bg-primary text-light bg-opacity-75 shadow ps-3 pe-3 pt-1 pb-1 uk-button-default border-1 " type="button" tabindex="-1"><i class="bi bi-file-arrow-down  "></i> Select profile</button>
+                        </div>
+                        <!-- <p class="m-0 mt-2">Are you a docter:<input name="is_doctor" type="checkbox" class="ms-4 uk-checkbox"></p> -->
+                        
+                    </div>
+                    
+                    <div class="">
+                        <button class="btn bg-info text-light shadow ps-4 pe-4 pt-1 pb-1 bg-opacity-50">Register  <i class="bi bi-arrow-90deg-right"> </i></button>
+                    </div>
+                    
+                    <div class="">
+                        <p class="m-0 text-center mt-1 opacity-50">or <i class="bi bi-option"></i></p>
+                    </div>
+                    <div class="">
+                        <a class="btn text-decoration-none bg-danger text-light shadow ps-4 pe-4 pt-1 pb-1 bg-opacity-50"  href="#modal-center" uk-toggle>login  <i class="bi bi-intersect"> </i></a>
+
+
+                        
+                        
+                    </div>
+                </form>
+                <div id="modal-center" class="uk-flex-top" uk-modal>
+                    <div class="uk-modal-dialog  uk-modal-body uk-margin-auto-vertical justify-content-centerbg-gradient shadow  rounded">
+
+                        <button class="uk-modal-close-default" type="button" uk-close></button>
+
+                        <form method="post" autocomplete="off">
+                            {% csrf_token %}
+                            <input type="hidden" name="type_auth" value="type_login">
+                            <div class="uk-margin d-flex justify-content-center">
+                                <div class="uk-inline shadow-sm rounded">
+                                    <span class="uk-form-icon" uk-icon="icon: user"></span>
+                                    <input class="uk-input" name="username_login" type="text" placeholder="Username">
+                                </div>
+                            </div>
+                        
+                            <div class="uk-margin d-flex justify-content-center">
+                                <div class="uk-inline shadow-sm rounded">
+                                    <a class="uk-form-icon uk-form-icon-flip" href="#" uk-icon="icon: lock"></a>
+                                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock"></span>
+                                    <input class="uk-input" type="password" name="password_login" placeholder="Password">
+                                </div>
+                            </div>
+
+                                <div class="uk-inline d-flex justify-content-center">
+                                    <button type="submit" class="btn bg-danger text-decoration-none text-light shadow ps-4 pe-4 pt-1 pb-1 bg-opacity-50"  >login  <i class="bi bi-intersect"> </i></button>
+                                </div>
+                        
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+            
+        </div>
+    </section>
+
+        <script>
+            
+            
+            
+            
+                if ( window.history.replaceState ) {
+                    window.history.replaceState( null, null, window.location.href );
+                }
+        </script>
+{% endblock %}
