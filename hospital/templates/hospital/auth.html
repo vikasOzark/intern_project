@@ -88,9 +88,9 @@
                         
                             <div class="uk-margin d-flex justify-content-center">
                                 <div class="uk-inline shadow-sm rounded">
-                                    <a class="uk-form-icon uk-form-icon-flip" href="#" uk-icon="icon: lock"></a>
+                                    <a class="uk-form-icon uk-form-icon-flip" id="see+passwd" onclick="myFunction()" uk-icon="icon: eye"></a>
                                     <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock"></span>
-                                    <input class="uk-input" type="password" name="password_login" placeholder="Password">
+                                    <input class="uk-input" type="password" name="password_login" id="pass_input" placeholder="Password">
                                 </div>
                             </div>
 
@@ -109,7 +109,14 @@
 
         <script>
             
-            
+            function myFunction() {
+            var x = document.getElementById("pass_input");
+            if (x.type === "password") {
+                x.type = "text";
+            } else {
+                x.type = "password";
+            }
+            }
             
             
                 if ( window.history.replaceState ) {
