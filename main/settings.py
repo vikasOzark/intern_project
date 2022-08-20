@@ -26,7 +26,9 @@ SECRET_KEY = 'django-insecure-p!y1u#8)z%bj(r#2fpkp2+#c32mc8bif8r%yji4snl4^46nm%s
 DEBUG = False
 
 ALLOWED_HOSTS = ['hospital-vikas.herokuapp.com']
-
+CSRF_TRUSTED_ORIGINS = [
+    'hospital-vikas.herokuapp.com'
+]
 
 # Application definition
 
