@@ -1,10 +1,22 @@
 {% extends 'hospital/base.html' %}
-{% block title %} welcome | {{reuqest.user.first_name}} {% endblock %}
+{% block title %} welcome | {{request.user.first_name}} {% endblock %}
 
 {% block content %}
+<style>
+        .bg-card{
+                background: rgb(221,174,238);
+                background: linear-gradient(201deg, rgba(221,174,238,1) 17%, rgba(148,187,233,1) 100%);
+        }
+
+        .info-card{
+                background: rgb(208,39,39);
+background: linear-gradient(231deg, rgba(208,39,39,0.6811099439775911) 7%, rgba(0,52,113,1) 100%);
+}
+        
+</style>
 <div class="container mt-5">
     <div class="">
-            <div class="row bg-light border rounded shadow-sm m-1 p-2">
+            <div class="row  border rounded info-card shadow m-1 p-2">
                     <div class="col-md-4 d-flex justify-content-center">
                             <div class="">
                                     <div class="rounded border picture rounded-circle">
@@ -15,8 +27,8 @@
                     <div class="col-md-5 d-flex align-content-center ">
                             <div class="mt-4">
                                     <div class="">
-                                            <p class="m-0">Name : {{user_profile.user.first_name}} {{user_profile.user.last_name}}</p>
-                                            <small class="mt-1">username : {{user_profile.user.username}}</small>
+                                            <p class="m-0 text-light"><strong>Name : </strong><b>{{user_profile.user.first_name}} {{user_profile.user.last_name}}</b></p>
+                                            <small class="mt-1 text-light"><strong>Username : </strong><b>{{user_profile.user.username}}</b></small>
                                     </div>
                             </div>
                     </div>
@@ -42,7 +54,7 @@
                         <div class="row">
                                 {% for patient in data_patient %}
                                         <div class="col-md-6">
-                                                <div class="card border rounded p-2 shadow-sm border bg-primary bg-opacity-25 mb-2">
+                                                <div class="card border bg-card rounded p-2 shadow  mb-2">
                                                         <div class=" ">
                                                                 <div class="position-">
                                                                         <div class=" picture rounded-circle text-center">
@@ -54,10 +66,10 @@
                                                                 
                                                         <div class="mt-4">
                                                                 <div class="">
-                                                                        <p class="m-0">Name : {{patient.user.first_name}} {{user_profile.user.last_name}}</p>
-                                                                        <small class="mt-1">username : {{patient.user.username}}</small>
-                                                                        <address class="m-0"><small class="m-0">Address : {{patient.address}}</small></address>                        
-                                                                        <p class="m-0"><small class="m-0">Email : {{patient.user.email}}</small></p>
+                                                                        <p class="m-0 text-light"><strong>Name : </strong>{{patient.user.first_name}} {{patient.user.last_name}}</p>
+                                                                        <small class="mt-1 text-light"><strong>Username : </strong>{{patient.user.username}}</small>
+                                                                        <address class="m-0 text-light"><small class="m-0"><strong>Address : </strong>{{patient.address}}</small></address>                        
+                                                                        <p class="m-0 text-light"><small class="m-0"><strong>Email : </strong>{{patient.user.email}}</small></p>
                                                                 </div>
                                                         </div>
                                                 

@@ -1,11 +1,15 @@
 {% extends 'hospital/base.html' %}
 {% block title %} Authentication {% endblock %}
+{% load static %}
 
 {% block content %}
 
     <section>
 
         <div class="mt-5 container">
+            <div class="position-absolute " style="z-index: 1; left:50rem; top:25rem">
+                <img class="opacity-25"  src="{% static 'hospital/images/bg.svg' %}" alt="">
+            </div>
             <div class="div m-3 text-center">
                 <h2 class="text-dark opacity-50">
                     <strong>Welcome to Hospital Management System</strong>
@@ -103,6 +107,7 @@
                 </div>
             </div>
         {% endif %}
+        
             
         </div>
     </section>
