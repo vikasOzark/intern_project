@@ -16,14 +16,14 @@
             <div class="uk-container ">
                 <div class="uk-navbar-left">
                     <ul class="uk-navbar-nav">
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">About</a></li>
+                        <li><a href="{% url 'detail' %}">dashbord</a></li>
+                        <li><a href="#">Blogs <span class="uk-badge">New</span></a></li>
                         {% if user.is_authenticated %}
                             <li><a href="#"><strong>{{request.user}}</strong></a></li>
                         {% endif %}
                     </ul>
                     {% if user.is_authenticated %}
-                        <div class=" d-flex float-end">
+                        <div class=" d-flex float-end ">
                             <a class="btn text-decoration-none bg-danger text-light shadow ps-4 pe-4 pt-1 pb-1 bg-opacity-50"  href="{% url 'logout' %}">logout  <i class="bi bi-intersect"> </i></a>
                         </div>
                     {% endif %}

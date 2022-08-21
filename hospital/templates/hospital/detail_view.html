@@ -10,8 +10,18 @@
 
         .info-card{
                 background: rgb(208,39,39);
-background: linear-gradient(231deg, rgba(208,39,39,0.6811099439775911) 7%, rgba(0,52,113,1) 100%);
-}
+                background: linear-gradient(231deg, rgba(208,39,39,0.6811099439775911) 7%, rgba(0,52,113,1) 100%);
+        }   
+        .blog_card_bg{
+            background: linear-gradient(90deg, #00d0ffb1 0%, #3a47d5a0 100%);
+        }
+        
+        .draf-card{
+            background: linear-gradient(90deg, #7688b3 0%, #182848 100%);
+        }
+        .badge{
+            background: linear-gradient(90deg, #FC466B 0%, #3F5EFB 100%);
+        }
         
 </style>
 <div class="container mt-5">
@@ -19,8 +29,8 @@ background: linear-gradient(231deg, rgba(208,39,39,0.6811099439775911) 7%, rgba(
             <div class="row  border rounded info-card shadow m-1 p-2">
                     <div class="col-md-4 d-flex justify-content-center">
                             <div class="">
-                                    <div class="rounded border picture rounded-circle">
-                                                <img src="{{user_profile.photo.url}}" style="height:100%;width: 100px;" class="shadow img-cover rounded-circle" alt="">
+                                    <div class="rounded picture rounded-circle">
+                                                <img src="{{user_profile.photo.url}}" style="height:100%;width: 100px;" class="shadow-light img-cover rounded-circle" alt="">
                                     </div>
                             </div>
                     </div>
@@ -82,6 +92,64 @@ background: linear-gradient(231deg, rgba(208,39,39,0.6811099439775911) 7%, rgba(
                 </div>
                 
                 
+        </div>
+        <div class="mt-3">
+            <div class="row">
+                <div class="col-md-8 ">
+                    <hr class="mb-2">
+                            <a href="{% url 'blog_create' %}" class=" uk-card-hover text-decoration-none text-light rounded-1 float-end  ps-3 pe-3 pt-2 pb-2 bg-primary bg-opacity-75 mt-0 mb-2" style="top:-1rem">
+                                <strong>Create blog <i class="bi bi-plus-square-fill"></i></strong>
+                            </a>
+                            <p class = " mt-3"><strong class="">{% if user.is_staff or is_admin == True%}Published by you {% else %} New blogs {%endif %}<span class="uk-badge">New</span></strong></p>
+                        
+                    <hr class="mt-4">
+                    <div class="row">
+                        {% for blog in blogs %}
+                            {% if blog.is_published == True %}
+                                <div class="col-md-6 ">
+                                    <div class=" blog_card_bg m-1 p-3 rounded uk-box-shadow-medium mb-2 uk-card-hover">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <img src="{{ blog.blog_image.url }}" style="height:auto;width: auto; top: 50%;" class=" shadow img-cover rounded-circle text-center" alt="">
+                                            </div>
+                                            <div class="col-md-9">
+                                                <h5 class="text-light text-capitalize" "><a href="{{blog.get_absolute_url}}" class="text-decoration-none text-light"><strong>{{ blog.title }}</strong></a></h5>
+                                                <p class="text-light m-0">{{ blog.summary | truncatechars:15}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <hr>
+                    <h4 class=" border-0 badge ps-3 pe-3 pt-2 pb-2 m-0">
+                        <strong>Saved as draft </strong> <span class="text-light">0</span>
+                    </h4>
+                    <hr>
+                    <div class="row">
+                        {% for blog in draft_blogs %}
+                        <div class="col-md-12 ">
+                            <div class=" blog_card_bg m-1 p-3 rounded uk-box-shadow-medium mb-2 uk-card-hover">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <img src="{{ blog.blog_image.url }}" style="height:auto;width: auto; top: 50%;" class=" shadow img-cover rounded-circle text-center" alt="">
+                                    </div>
+                                    <div class="col-md-9">
+                                        <h5 class="text-light text-capitalize" "><a href="{{blog.get_absolute_url}}" class="text-decoration-none text-light"><strong>{{ blog.title }}</strong></a></h5>
+                                        <p class="text-light m-0">{{ blog.summary | truncatechars:15}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            
+            </div>
         </div>
 </div>    
 

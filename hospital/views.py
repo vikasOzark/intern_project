@@ -1,11 +1,13 @@
 import profile
+from unicodedata import category
+from xml.dom.minidom import parseString
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from .models import UserProfileModel
+from .models import UserProfileModel, BlogModel
 from django.contrib import messages
 # import Q
-# from django.contrin.models import Q
+from django.db.models import Q
 # Create your views here.
 
 def authentication(request):
@@ -74,16 +76,32 @@ def authentication(request):
 
 def detail_view(request):
     user = request.user
+    
     if user.is_authenticated:
         if user.is_superuser or user.is_staff:
             data_patient = UserProfileModel.objects.filter(is_patient=True)
             user_profile = UserProfileModel.objects.get(user=request.user)
-            print(user_profile)
+            blogs = BlogModel.objects.filter(user = user)
+            draft_blogs = BlogModel.objects.filter(Q(is_draft=True) & Q(user=user))
+            
+            context = {
+                'blogs': blogs,
+                'data_patient': data_patient,
+                'user_profile': user_profile,
+                'draft_blogs': draft_blogs,
+            }
 
-            return render(request, 'hospital/detail_view.html', {'data_patient': data_patient, 'user_profile': user_profile})
+            return render(request, 'hospital/detail_view.html', context)
         else:
+
             user_profile = UserProfileModel.objects.get(user=user)
-            return render(request, 'hospital/detail_view.html', {'user_profile': user_profile})
+            blogs = BlogModel.objects.all()
+            context = {
+                'blogs': blogs,
+                'user_profile': user_profile,
+            }
+            
+            return render(request, 'hospital/detail_view.html', context)
             
         
     return redirect('index')
@@ -91,3 +109,38 @@ def detail_view(request):
 def logout_view(request):
     logout(request)
     return redirect('index')
+
+def blog_view(request,slug):
+    user = request.user
+    data_blog = BlogModel.objects.get(slug=slug)
+    return render(request, 'hospital/blog.html', {'data_blog': data_blog})
+    
+def blog_create(request):
+    method = request.method 
+    if method == 'POST':
+        title = request.POST['title']
+        content = request.POST['content']
+        category = request.POST['category']
+        blog_image = request.FILES.get('blog_image')
+        summary = request.POST['summary']
+        # is_draft = request.POST['is_draft']
+        all_fields = [title, content, category, summary, blog_image]
+        if all(all_fields) == True:
+            blog = BlogModel(
+                title=title,
+                content=content,
+                category=category,
+                summary=summary,
+                blog_image=blog_image,
+                user=request.user,
+            )
+            blog.save()
+            return redirect('detail')
+        else:
+            messages.error(request, 'Please fill all the fields !')
+            return render(request, 'hospital/blog_create.html')
+        
+    return render(request, 'hospital/blog_create.html')
+
+def save_draft(request):
+    pass

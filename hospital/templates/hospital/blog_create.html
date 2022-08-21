@@ -1,0 +1,90 @@
+{% extends 'hospital/base.html' %}
+{% block title %} blog | Create here {% endblock %}
+
+{% block content %}
+    
+    <style>
+        .center{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 88vh;
+        }
+
+        .info-card{
+                background: rgb(208,39,39);
+                background: linear-gradient(231deg, rgba(208, 39, 197, 0.681) 7%, rgb(83, 149, 225) 100%);
+        }
+        
+    </style>
+    <!-- background-color: #f5f5f5; --> 
+
+
+    <div class="container">
+        <div class="row center">
+            <div class="col-md-12">
+                <div class="card shadow">
+                    <div class="card-header info-card">
+                        <h3 class="card-title text-light">Create Blog</h3>
+                    </div>
+                    <div class="card-body">
+
+                        <form class="uk-grid-small" method="post" autocomplete="off" enctype="multipart/form-data" uk-grid>
+                            {% csrf_token %}
+                            <div class="uk-width-1-2@s">
+                                <input class="uk-input rounded-1 shadow-sm" name="title" type="text" placeholder="Blog title">
+                            </div>
+
+                            <div class="uk-width-1-2@s rounded">
+                                <select class="uk-select rounded " name="category" >
+                                    <option class="">Select blog Category</option>
+                                    <option value="MH" class="">Mental health</option>
+                                    <option value="HD" class="">Heart Disease</option>
+                                    <option value="C19" class="">Covid19</option>
+                                    <option value="IM" class="">Immunization</option>
+                                </select>
+                            </div>
+                            
+                            <div class="uk-width-1-2@s">
+                                <input class="uk-input rounded-1 shadow-sm" name="summary" type="text" placeholder="Summary">
+                            </div>
+                            
+                                <div class="uk-width-1-1 ">
+                                    <textarea class="uk-textarea rounded uk-box-shadow-medium" rows="5" name="content" placeholder="Blog content ..."></textarea>
+                                </div>
+
+                                <div class=" uk-margin mb-1 uk-width-1-1">
+                                    <div uk-form-custom>
+                                        <input name="blog_image" class="uk-input" type="file">
+                                        <button class="btn bg-primary text-light bg-opacity-75 shadow ps-3 pe-3 pt-1 pb-1 uk-button-default border-1 " type="button" tabindex="-1"><i class="bi bi-file-arrow-down  "></i> Select profile</button>
+                                    </div>
+                                </div>
+                                
+                        
+                                <div class="">
+                                    <button type="submit" class="btn bg-success text-light shadow ps-4 pe-4 pt-1 pb-1 bg-opacity-50">Publish  <i class="bi bi-file-post-fill"> </i></button>
+                                </div>
+                                
+                                <div class="">
+                                    <p class="m-0 text-center mt-1 opacity-50">or <i class="bi bi-option"></i></p>
+                                </div>
+                                <div class="">
+                                    <a href="{% url save_draft' %} " class="btn text-decoration-none bg-danger text-light shadow ps-4 pe-4 pt-1 pb-1 bg-opacity-50">Save draft  <i class="bi bi-pencil-square"> </i></a>
+                                </div>
+                        
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    var $fileInput = $('.custom-file-input');  
+
+if ( window.history.replaceState ) {
+                    window.history.replaceState( null, null, window.location.href );
+                }
+</script>
+        
+{% endblock %}
