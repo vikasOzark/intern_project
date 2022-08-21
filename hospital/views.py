@@ -8,6 +8,9 @@ from .models import UserProfileModel, BlogModel
 from django.contrib import messages
 # import Q
 from django.db.models import Q
+# JsonResponse import 
+from django.http import JsonResponse
+
 # Create your views here.
 
 def authentication(request):
@@ -142,5 +145,41 @@ def blog_create(request):
         
     return render(request, 'hospital/blog_create.html')
 
+
+# csrf exempt import
+
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt
 def save_draft(request):
-    pass
+
+    method = request.method
+    print(request.POST)
+    if method == 'POST':
+        title = request.POST['title']
+        content = request.POST['content']
+        category = request.POST.get('category')
+        blog_image = request.POST.get('blog_image')
+        summary = request.POST['summary']
+
+     
+        print(f'title : {title} | content : {content} | category : {category} | summary : {summary} | blog_image : {blog_image}')
+        
+        all_fields = [title, content, category, summary, blog_image]
+        
+
+        if all(all_fields) == True:
+            blog = BlogModel(
+                title=title,
+                content=content,
+                category=category,
+                summary=summary,
+                blog_image=blog_image,
+                user=request.user,
+                is_draft=True,
+                is_published=False,
+            )
+            blog.save()
+            return redirect('detail')
+        else:
+            return JsonResponse({'status': 'error'})
+        

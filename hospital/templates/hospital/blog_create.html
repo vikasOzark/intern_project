@@ -32,30 +32,30 @@
                         <form class="uk-grid-small" method="post" autocomplete="off" enctype="multipart/form-data" uk-grid>
                             {% csrf_token %}
                             <div class="uk-width-1-2@s">
-                                <input class="uk-input rounded-1 shadow-sm" name="title" type="text" placeholder="Blog title">
+                                <input class="uk-input rounded-1 shadow-sm" id="title" name="title" type="text" placeholder="Blog title">
                             </div>
 
                             <div class="uk-width-1-2@s rounded">
-                                <select class="uk-select rounded " name="category" >
-                                    <option class="">Select blog Category</option>
-                                    <option value="MH" class="">Mental health</option>
-                                    <option value="HD" class="">Heart Disease</option>
-                                    <option value="C19" class="">Covid19</option>
-                                    <option value="IM" class="">Immunization</option>
+                                <select class="uk-select rounded " id="category" name="category" >
+                                    <option >Select blog Category</option>
+                                    <option name="category" value="MH" class="">Mental health</option>
+                                    <option name="category" value="HD" class="">Heart Disease</option>
+                                    <option name="category" value="C19" class="">Covid19</option>
+                                    <option name="category" value="IM" class="">Immunization</option>
                                 </select>
                             </div>
                             
                             <div class="uk-width-1-2@s">
-                                <input class="uk-input rounded-1 shadow-sm" name="summary" type="text" placeholder="Summary">
+                                <input class="uk-input rounded-1 shadow-sm" id="summary" name="summary" type="text" placeholder="Summary">
                             </div>
                             
                                 <div class="uk-width-1-1 ">
-                                    <textarea class="uk-textarea rounded uk-box-shadow-medium" rows="5" name="content" placeholder="Blog content ..."></textarea>
+                                    <textarea class="uk-textarea rounded uk-box-shadow-medium" rows="5" id="content" name="content" placeholder="Blog content ..."></textarea>
                                 </div>
 
                                 <div class=" uk-margin mb-1 uk-width-1-1">
                                     <div uk-form-custom>
-                                        <input name="blog_image" class="uk-input" type="file">
+                                        <input id="blog_image" name="blog_image" class="uk-input" type="file" accept="image/*,.pdf">
                                         <button class="btn bg-primary text-light bg-opacity-75 shadow ps-3 pe-3 pt-1 pb-1 uk-button-default border-1 " type="button" tabindex="-1"><i class="bi bi-file-arrow-down  "></i> Select profile</button>
                                     </div>
                                 </div>
@@ -68,20 +68,49 @@
                                 <div class="">
                                     <p class="m-0 text-center mt-1 opacity-50">or <i class="bi bi-option"></i></p>
                                 </div>
-                                <div class="">
-                                    <a href="{% url save_draft' %} " class="btn text-decoration-none bg-danger text-light shadow ps-4 pe-4 pt-1 pb-1 bg-opacity-50">Save draft  <i class="bi bi-pencil-square"> </i></a>
-                                </div>
-                        
-                        </form>
+                                
+                            </form>
+                            <div class="">
+                                <a onclick="save_draft()" class="btn text-decoration-none bg-danger text-light shadow ps-4 pe-4 pt-1 pb-1 bg-opacity-50">Save draft  <i class="bi bi-pencil-square"> </i></a>
+                            </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
+    <script src="https://malsup.github.io/jquery.form.js"></script> 
+ 
 <script>
-    var $fileInput = $('.custom-file-input');  
+    
 
+    function save_draft(){
+        $.ajax({
+            url: "{% url 'save_draft' %}",
+            type: "POST",
+            data: {
+                'title': $('#title').val(),
+                'category': $('#category').val(),
+                'summary': $('#summary').val(),
+                'content': $('#content').val(),
+                'blog_image': $('#blog_image').val(),
+                'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()
+            },
+            enctype: 'multipart/form-data',
+            success: function(data){
+                console.log(data);
+                if(data.status == 'success'){
+                    alert('Blog saved successfully');
+                }
+                else{
+                    UIkit.notification({message: '<span uk-icon=\'icon:  close\'></span> All fieldsis required !'})
+
+                }
+            }
+        });
+    }
+    
+    
 if ( window.history.replaceState ) {
                     window.history.replaceState( null, null, window.location.href );
                 }
