@@ -24,7 +24,7 @@
             <div class="col-md-4 d-flex justify-content-center mt-3">
                 <div class="">
                         <div class="rounded border picture rounded ">
-                                <img src="{{data_blog.blog_image.url}}" style="height: 250px;width: 400px;" class="shadow img-cover rounded-1" alt="">
+                                <img src="{{data_blog.blog_image.url}}" style="height: 250px;width: 400px; top:50%" class="shadow img-cover rounded-1" alt="">
                         </div>
                 </div>
         </div>
@@ -32,7 +32,7 @@
                 <div class="">
                         <div class="">
                                 <p class="m-0 "><strong>Title : </strong><b> {{ data_blog.title}}<b></p>
-                                <small class = "bg-info bg-opacity-50 rounded ps-2 pe-2 pt-1 pb-1 hospital-1 mt-1 text-light" ><strong>Category : </strong> {{ data_blog.category }}</small>
+                                <small class = "bg-info bg-opacity-50 rounded ps-2 pe-2 pt-1 pb-1 hospital-1 mt-1 text-light" ><strong>Category : </strong> {{ data_blog.get_category_display }}</small>
                                 <p class="mt-1 opacity-75"><small>Last modified time : {{data_blog.updated_at}}</small></p>
                         </div>
                 </div>

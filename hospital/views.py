@@ -7,9 +7,11 @@ from django.contrib.auth.models import User
 from .models import UserProfileModel, BlogModel
 from django.contrib import messages
 # import Q
-from django.db.models import Q
+from django.db.models import Q, Count
 # JsonResponse import 
 from django.http import JsonResponse
+
+
 
 # Create your views here.
 
@@ -82,16 +84,19 @@ def detail_view(request):
     
     if user.is_authenticated:
         if user.is_superuser or user.is_staff:
+
             data_patient = UserProfileModel.objects.filter(is_patient=True)
             user_profile = UserProfileModel.objects.get(user=request.user)
-            blogs = BlogModel.objects.filter(user = user)
-            draft_blogs = BlogModel.objects.filter(Q(is_draft=True) & Q(user=user))
+            total_draft = BlogModel.objects.filter(is_draft=True).count()
+            blogs = BlogModel.objects.filter(user = user).order_by('-updated_at')
+            draft_blogs = BlogModel.objects.filter(Q(is_draft=True) & Q(user=user)).order_by('-updated_at')
             
             context = {
                 'blogs': blogs,
                 'data_patient': data_patient,
                 'user_profile': user_profile,
                 'draft_blogs': draft_blogs,
+                'total_draft' : total_draft,
             }
 
             return render(request, 'hospital/detail_view.html', context)
@@ -120,13 +125,21 @@ def blog_view(request,slug):
     
 def blog_create(request):
     method = request.method 
+    print(request.POST)
     if method == 'POST':
         title = request.POST['title']
         content = request.POST['content']
         category = request.POST['category']
         blog_image = request.FILES.get('blog_image')
         summary = request.POST['summary']
-        # is_draft = request.POST['is_draft']
+        is_draft = request.POST.get('is_draft')
+        
+        if is_draft == 'True':
+            is_draft = True
+        else:
+            is_draft = False
+
+        print(is_draft)
         all_fields = [title, content, category, summary, blog_image]
         if all(all_fields) == True:
             blog = BlogModel(
@@ -136,6 +149,7 @@ def blog_create(request):
                 summary=summary,
                 blog_image=blog_image,
                 user=request.user,
+                is_draft=is_draft,
             )
             blog.save()
             return redirect('detail')
@@ -153,6 +167,7 @@ from django.views.decorators.csrf import csrf_exempt
 def save_draft(request):
 
     method = request.method
+    print(method)
     print(request.POST)
     if method == 'POST':
         title = request.POST['title']

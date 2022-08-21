@@ -97,23 +97,27 @@
             <div class="row">
                 <div class="col-md-8 ">
                     <hr class="mb-2">
+                    {% if user.is_staff or is.superuser or is_admin  == True%}
                             <a href="{% url 'blog_create' %}" class=" uk-card-hover text-decoration-none text-light rounded-1 float-end  ps-3 pe-3 pt-2 pb-2 bg-primary bg-opacity-75 mt-0 mb-2" style="top:-1rem">
                                 <strong>Create blog <i class="bi bi-plus-square-fill"></i></strong>
                             </a>
+                            {% endif %}
                             <p class = " mt-3"><strong class="">{% if user.is_staff or is_admin == True%}Published by you {% else %} New blogs {%endif %}<span class="uk-badge">New</span></strong></p>
                         
                     <hr class="mt-4">
                     <div class="row">
                         {% for blog in blogs %}
                             {% if blog.is_published == True %}
-                                <div class="col-md-6 ">
+                                <div class="col-md-6  ">
                                     <div class=" blog_card_bg m-1 p-3 rounded uk-box-shadow-medium mb-2 uk-card-hover">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <img src="{{ blog.blog_image.url }}" style="height:auto;width: auto; top: 50%;" class=" shadow img-cover rounded-circle text-center" alt="">
+                                                <img src="{{ blog.blog_image.url }}" style="height:auto;width: auto;" class=" shadow img-cover rounded-circle text-center" alt="">
                                             </div>
                                             <div class="col-md-9">
+
                                                 <h5 class="text-light text-capitalize" "><a href="{{blog.get_absolute_url}}" class="text-decoration-none text-light"><strong>{{ blog.title }}</strong></a></h5>
+                                                <small class = "bg-success bg-opacity-50 rounded ps-2 pe-2 pt-1 pb-1 hospital-1 mt-1 mb-1 text-light" ><strong>Category : </strong> {{ blog.get_category_display }}</small>
                                                 <p class="text-light m-0">{{ blog.summary | truncatechars:15}}</p>
                                             </div>
                                         </div>
@@ -125,11 +129,14 @@
                 </div>
                 
                 <div class="col-md-4">
+                        {% if user.is_staff or is.superuser or is_admin  == True%}
                     <hr>
                     <h4 class=" border-0 badge ps-3 pe-3 pt-2 pb-2 m-0">
-                        <strong>Saved as draft </strong> <span class="text-light">0</span>
-                    </h4>
-                    <hr>
+
+                        <strong>Saved as draft </strong> <span class="text-light">{{ total_draft }}</span>
+                </h4>
+                <hr>
+                {% endif %}
                     <div class="row">
                         {% for blog in draft_blogs %}
                         <div class="col-md-12 ">
@@ -139,7 +146,9 @@
                                         <img src="{{ blog.blog_image.url }}" style="height:auto;width: auto; top: 50%;" class=" shadow img-cover rounded-circle text-center" alt="">
                                     </div>
                                     <div class="col-md-9">
-                                        <h5 class="text-light text-capitalize" "><a href="{{blog.get_absolute_url}}" class="text-decoration-none text-light"><strong>{{ blog.title }}</strong></a></h5>
+
+                                            <h5 class="text-light text-capitalize" "><a href="{{blog.get_absolute_url}}" class="text-decoration-none text-light"><strong>{{ blog.title }}</strong></a></h5>
+                                            <small class = "bg-success bg-opacity-50 rounded ps-2 pe-2 pt-1 pb-1 hospital-1 mt-1 mb-1 text-light" ><strong>Category : </strong> {{ blog.get_category_display }}</small>
                                         <p class="text-light m-0">{{ blog.summary | truncatechars:15}}</p>
                                     </div>
                                 </div>
