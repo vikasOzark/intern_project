@@ -198,3 +198,9 @@ def save_draft(request):
         else:
             return JsonResponse({'status': 'error'})
         
+def all_blogs(request):
+    blogs = BlogModel.objects.all()
+    context = {
+        'blogs': blogs,
+    }
+    return render(request, 'hospital/all_blog.html', context)

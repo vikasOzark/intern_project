@@ -1,0 +1,53 @@
+{% extends 'hospital/base.html' %}
+{% block title %} Blogs {% endblock %}
+
+{% block content %}
+<style>
+        .bg-card{
+                background: rgb(221,174,238);
+                background: linear-gradient(201deg, rgba(221,174,238,1) 17%, rgba(148,187,233,1) 100%);
+        }
+
+        .info-card{
+                background: rgb(208,39,39);
+                background: linear-gradient(231deg, rgba(208,39,39,0.6811099439775911) 7%, rgba(0,52,113,1) 100%);
+        }   
+        .blog_card_bg{
+            background: linear-gradient(90deg, #00d0ffb1 0%, #3a47d5a0 100%);
+        }
+        
+        .draf-card{
+            background: linear-gradient(90deg, #7688b3 0%, #182848 100%);
+        }
+        .badge{
+            background: linear-gradient(90deg, #FC466B 0%, #3F5EFB 100%);
+        }
+        
+</style>
+
+
+<div class="container">
+        <div class="row mt-5">
+        {% for blog in blogs %}
+        {% if blog.is_published == True %}
+            <div class="col-md-6 ">
+                <div class=" blog_card_bg m-2 p-3 rounded uk-box-shadow-medium mb-2 uk-card-hover">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img src="{{ blog.blog_image.url }}" style="height:auto;width: auto;" class=" shadow img-cover rounded-circle text-center" alt="">
+                        </div>
+                        <div class="col-md-9">
+
+                            <h5 class="text-light text-capitalize" "><a href="{{blog.get_absolute_url}}" class="text-decoration-none text-light"><strong>{{ blog.title }}</strong></a></h5>
+                            <small class = "bg-success bg-opacity-50 rounded ps-2 pe-2 pt-1 pb-1 hospital-1 mt-1 mb-1 text-light" ><strong>Category : </strong> {{ blog.get_category_display }}</small>
+                            <p class="text-light m-0">{{ blog.summary | truncatechars:15}}</p>
+                        </div>
+                    </div>
+                </div>
+                <small class="opacity-50 float-end">{{blog.updated_at}}</small>
+            </div>
+        {% endif %}
+    {% endfor %}
+    </div>
+</div>
+{% endblock %}

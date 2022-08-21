@@ -17,7 +17,7 @@
                 <div class="uk-navbar-left">
                     <ul class="uk-navbar-nav">
                         <li><a href="{% url 'detail' %}">dashbord</a></li>
-                        <li><a href="#">Blogs <span class="uk-badge">New</span></a></li>
+                        <li><a href="{% url 'all_blogs' %}">Blogs <span class="uk-badge">New</span></a></li>
                         {% if user.is_authenticated %}
                             <li><a href="#"><strong>{{request.user}}</strong></a></li>
                         {% endif %}
