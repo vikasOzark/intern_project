@@ -2,6 +2,7 @@
 {% block title %} welcome | {{request.user.first_name}} {% endblock %}
 
 {% block content %}
+
 <style>
         .bg-card{
                 background: rgb(221,174,238);
@@ -23,8 +24,11 @@
             background: linear-gradient(90deg, #FC466B 0%, #3F5EFB 100%);
         }
         
+		.doc-card{
+			background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(14,174,87,1) 0%, rgba(12,116,117,1) 90% );
+		}
 </style>
-<div class="container mt-5">
+<div class="container mt-5 ">
     <div class="">
             <div class="row  border rounded info-card shadow m-1 p-2">
                     <div class="col-md-4 d-flex justify-content-center">
@@ -123,43 +127,191 @@
                                         </div>
                                     </div>
                                 </div>
-                            {% endif %}
+								
+								{% endif %}
+								{% empty %}
+							
+								<div class="p-1">
+									<p class="alert alert-info m-1 shadow">You don't have any blog !</p>
+								</div>
                         {% endfor %}
                     </div>
                 </div>
                 
                 <div class="col-md-4">
-                        {% if user.is_staff or is.superuser or is_admin  == True%}
-                    <hr>
-                    <h4 class=" border-0 badge ps-3 pe-3 pt-2 pb-2 m-0">
+					{% if user.is_staff or is.superuser or is_admin  == True%}
+						<hr>
+							<h4 class=" border-0 badge ps-3 pe-3 pt-2 pb-2 m-0">
+                                <strong>Saved as draft </strong> <span class="text-light">{{ total_draft }}</span>
+							</h4>
+						<hr>
+					{% else %}
+						<hr>
+							<p class="m-0"><strong class="mt-3">Book appointment</strong></p>
+							
+						<hr class="mt-4">
+					{% endif %}
 
-                        <strong>Saved as draft </strong> <span class="text-light">{{ total_draft }}</span>
-                </h4>
-                <hr>
-                {% endif %}
+
+						
+						
                     <div class="row">
+					{% if user.is_staff or is.superuser or is_admin  == True %}
                         {% for blog in draft_blogs %}
-                        <div class="col-md-12 ">
-                            <div class=" blog_card_bg m-1 p-3 rounded uk-box-shadow-medium mb-2 uk-card-hover">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <img src="{{ blog.blog_image.url }}" style="height:auto;width: auto; top: 50%;" class=" shadow img-cover rounded-circle text-center" alt="">
-                                    </div>
-                                    <div class="col-md-9">
+							<div class="col-md-12 ">
+								<div class=" blog_card_bg m-1 p-3 rounded uk-box-shadow-medium mb-2 uk-card-hover">
+									<div class="row">
+										<div class="col-md-3">
+											<img src="{{ blog.blog_image.url }}" style="height:auto;width: auto;" class=" shadow img-cover rounded-circle text-center" alt="">
+										</div>
+										<div class="col-md-9">
 
-                                            <h5 class="text-light text-capitalize" "><a href="{{blog.get_absolute_url}}" class="text-decoration-none text-light"><strong>{{ blog.title }}</strong></a></h5>
-                                            <small class = "bg-success bg-opacity-50 rounded ps-2 pe-2 pt-1 pb-1 hospital-1 mt-1 mb-1 text-light" ><strong>Category : </strong> {{ blog.get_category_display }}</small>
-                                        <p class="text-light m-0">{{ blog.summary | truncatechars:15}}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+												<h5 class="text-light text-capitalize" "><a href="{{blog.get_absolute_url}}" class="text-decoration-none text-light"><strong>{{ blog.title }}</strong></a></h5>
+												<small class = "bg-success bg-opacity-50 rounded ps-2 pe-2 pt-1 pb-1 hospital-1 mt-1 mb-1 text-light" ><strong>Category : </strong> {{ blog.get_category_display }}</small>
+											<p class="text-light m-0">{{ blog.summary | truncatechars:15}}</p>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						{% empty %}
+						
+						<div class="p-1">
+							<p class="alert alert-info m-1 shadow">You don't have any draft blog !</p>
+						</div>
                         {% endfor %}
+					{% else %}
+					{% for docs in doctors %}
+						<div class="col-md-12 ">
+							<div class=" doc-card m-1 p-3 rounded uk-box-shadow-medium mb-2 uk-card-hover">
+								<div class="row">
+									<div class="col-md-3">
+										<img src="{{docs.usr_persion.photo.url}}" style="height:auto;width: auto; top: 50%;" class=" shadow img-cover rounded text-center" alt="">
+									</div>
+									<div class="col-md-9">
+											<h4 class="m-0 text-light"><strong>{{ docs.first_name }}</strong></h4>
+										<p class="text-light m-0">@{{docs.first_name}}</p>
+									</div>
+								</div>
+								<a href="#modal-center-ap{{docs.id}}"  class=" uk-card-hover text-decoration-none  rounded-1 float-end  ps-3 pe-3 pt-2 pb-2 shadow bg-light mt-0 mb-2" style="top:-1rem" uk-toggle>
+									<strong>Appointment <i class="bi bi-plus-square-fill"></i></strong>
+								</a>
+							</div>
+						</div>
+
+						<div id="modal-center-ap{{docs.id}}" class="uk-flex-top" uk-modal>
+							<div class="uk-modal-dialog uk-modal-body rounded uk-margin-auto-vertical">
+
+								<button class="uk-modal-close-default" type="button" uk-close></button>
+
+								<form class="uk-grid-small" method="post" autocomplete="off" enctype="multipart/form-data" uk-grid>
+									{% csrf_token %}
+									<input type="hidden" name="type_auth" value="appointment">
+									<input type="hidden" name="doc_id" value="{{docs.id}}">
+
+									<div class="uk-width-1-1">
+										<input class="uk-input rounded-1 shadow-sm"  name="discription" type="text" placeholder="Please describe required speciality">
+									</div>
+									<div class="uk-width-1-2@s">
+										<input class="uk-input rounded-1 shadow-sm"  name="date" type="date" required pattern="\d{2}-\d{2}-\d{4}">
+									</div>
+									<div class="uk-width-1-2@s">
+										<input class="uk-input rounded-1 shadow-sm"  name="time" type="time" >
+									</div>
+
+									
+									<div class="">
+										<button type="submit" class="btn  text-light shadow ps-4 pe-4 pt-1 pb-1 btn-appoint" id="{{ docs.id }}"  style="background-color: #23CE6B;">Book now  <i class="bi bi-arrow-90deg-right"> </i></button>
+									</div>
+s
+								</form>
+				
+
+							</div>
+
+						</div>
+						
+					{% endfor %}
+					{% endif %}
                     </div>
                 </div>
             
             </div>
         </div>
+		{% if user.is_staff or is.superuser or is_admin  == True %}
+		<hr>
+			<h5 class="m-0"><strong>Patient appointments</strong></h5>
+		<hr>
+
+		<div class="row">
+			{% for patient in patient_obj %}
+			{% for i in patient_profile %}
+			<div class="col-md-6">
+				<div class=" p-2">
+					<div class=" doc-card shadow m-1 p-3 rounded uk-box-shadow-medium mb-2 uk-card-hover">
+						<div class="row">
+							<div class="col-md-3">
+								<img src="{{i.photo.url}}" style="height:auto;width: auto; top: 50%;" class=" shadow img-cover rounded text-center" alt="">
+							</div>
+							<div class="col-md-9">
+									<h5 class="m-0 text-light"><strong>Patient : {{ patient.patient.first_name }}</strong></h5>
+									<p class="m-0 text-light p-2 border border-light bg-dark bg-opacity-50 rounded "><strong>Discription</strong> : {{patient.discription}}</p>
+
+									<p class="m-0 text-light  "><strong>Date : </strong>{{patient.apppoint_date}}</p>
+									<a onclick="book_ap({{patient.id}})" class="text-decoration-none ps-3 pe-3 pt-1 pb-1 float-end border bg-light rounded-1" id="btn{{patient.id}}"><strong>{% if patient.is_pending == True %} Pending {% else %} Approved {% endif %}</strong></a>
+
+									<p class="m-0 text-light  "><strong>Time : </strong>{{patient.appoint_time}}</p>
+
+							</div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+			{% endfor %}
+		</div>
+		{% else %}
+		<hr>
+			<h5 class="m-0"><strong>My appointments</strong></h5>
+		<hr>
+		<div class="row">
+			{% for patient in patient_obj %}
+			<div class="col-md-4">
+				<div class=" p-2">
+					<div class=" doc-card shadow m-1 p-3 rounded uk-box-shadow-medium mb-2 uk-card-hover">
+						
+						<h5 class="m-0 text-light"><strong>Doctore : {{ patient.doctor.first_name }}</strong></h5>
+						<p class="m-0 text-light p-2 border border-light rounded "><strong>Discription</strong> : {{patient.discription}}</p>
+						
+						<p class="m-0 text-light  "><strong>Date : </strong>{{patient.apppoint_date}}</p>
+						<p class="ps-3 pe-3 pt-1 pb-1 text-primary float-end border bg-light rounded-1"><strong>{% if patient.is_pending == True %} Pending {% else %} Booked {% endif %}</strong></p>
+						<p class="m-0 text-light  "><strong>Time : </strong>{{patient.appoint_time}} to {{final_time}}</p>
+			
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+		
+		{% endif %}
 </div>    
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
+<script>
+	function book_ap(id){
+		
+		$.ajax({
+			url : "{% url 'book_ap' %}",
+			method:'get',
+			data : {'id' : id},
+			dataType : 'json',
+			success : function(data){
+				UIkit.notification({message: 'Book approved !', status: 'success'})
+				var btn = this
+				console.log(btn)
+			}
+		})
+	}
+</script>
 {% endblock %}

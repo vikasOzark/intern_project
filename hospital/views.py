@@ -4,16 +4,26 @@ from xml.dom.minidom import parseString
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from .models import UserProfileModel, BlogModel
+from .models import UserProfileModel, BlogModel, BookAppointment
 from django.contrib import messages
 # import Q
+from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q, Count
 # JsonResponse import 
 from django.http import JsonResponse
-
-
+# from . import event
+from datetime import datetime , date, timedelta
+# from googleapiclient.discovery import build
+# from google.oauth2 import service_account
 
 # Create your views here.
+# SCOPES = ["https://www.googleapis.com/auth/calendar"]
+# service_account_email = "vikask99588@gmail.com"
+# credentials = service_account.Credentials.from_service_account_file('client_secret_200284731842-0i542ral2qlshrte9dqiv7q30bdoocs0.apps.googleusercontent.com.json')
+# scoped_credentials = credentials.with_scopes(SCOPES)
+# calendarId = "n1264sanvvuog5ojbf3qibql2s@group.calendar.google.com"
+
+
 
 def authentication(request):
     method = request.method
@@ -79,17 +89,61 @@ def authentication(request):
     
     return render(request, 'hospital/auth.html')
 
+# def build_service(request):
+
+#     service = build("calendar", "v3", credentials=scoped_credentials)
+#     return service
+
+
 def detail_view(request):
     user = request.user
+    
+    if request.method == 'POST':
+        data = request.POST
+        doc_id = data['doc_id']
+        discription = data['discription']
+        time = data['time']
+        date_apt = data['date']
+        doctor = User.objects.get(id=int(doc_id))
+        fields = [doc_id, discription, time, date_apt]
+        if all(fields):
+        
+            appoint_date = datetime.strptime(date_apt,'%Y-%m-%d').date()
+            if date.today() < appoint_date:
+                book = BookAppointment(
+                    doctor = doctor,
+                    patient = user,
+                    apppoint_date = appoint_date,
+                    appoint_time = time,
+                    discription = discription,
+
+                )   
+                book.save()
+                # event.create_event(doctor, discription, date_apt)
+                
+                messages.info(request, 'Appointment created successfully !')
+                return redirect('detail')
+            else:
+                messages.info(request, 'Appointment date shout not be less then current date !')
+                return redirect('detail')
+        else:
+            messages.info(request, 'All fields required !')
+            return redirect('detail')
+
     
     if user.is_authenticated:
         if user.is_superuser or user.is_staff:
 
             data_patient = UserProfileModel.objects.filter(is_patient=True)
             user_profile = UserProfileModel.objects.get(user=request.user)
-            total_draft = BlogModel.objects.filter(is_draft=True).count()
+            total_draft = BlogModel.objects.filter(Q(is_draft=True) & Q(user=user)).count()
             blogs = BlogModel.objects.filter(user = user).order_by('-updated_at')
             draft_blogs = BlogModel.objects.filter(Q(is_draft=True) & Q(user=user)).order_by('-updated_at')
+            patient_obj = BookAppointment.objects.select_related().filter(doctor=user).order_by('-apppoint_date')
+            
+            patient_profile = []
+            for obj in patient_obj:
+                patient_profile.append(UserProfileModel.objects.get(user = obj.patient))
             
             context = {
                 'blogs': blogs,
@@ -97,16 +151,30 @@ def detail_view(request):
                 'user_profile': user_profile,
                 'draft_blogs': draft_blogs,
                 'total_draft' : total_draft,
+                'patient_obj' : patient_obj,
+                'patient_profile' : patient_profile
             }
 
             return render(request, 'hospital/detail_view.html', context)
         else:
 
+            doctors = User.objects.select_related().filter(Q(is_staff = True) | Q(is_superuser = True))
+            print(doctors)
             user_profile = UserProfileModel.objects.get(user=user)
             blogs = BlogModel.objects.all()
+            patient_obj = BookAppointment.objects.select_related().filter(patient=user).order_by('-apppoint_date')
+            # after = 45
+            # # Add 45 minutes to datetime object
+            # final_time = patient_obj.appoint_time + timedelta(minutes=after)
+
+            # print(final_time)
             context = {
                 'blogs': blogs,
                 'user_profile': user_profile,
+                'doctors' : doctors,
+                'patient_obj' : patient_obj,
+                # 'final_time' : final_time
+
             }
             
             return render(request, 'hospital/detail_view.html', context)
@@ -162,7 +230,6 @@ def blog_create(request):
 
 # csrf exempt import
 
-from django.views.decorators.csrf import csrf_exempt
 @csrf_exempt
 def save_draft(request):
 
@@ -204,3 +271,28 @@ def all_blogs(request):
         'blogs': blogs,
     }
     return render(request, 'hospital/all_blog.html', context)
+
+@csrf_exempt
+def book_appoint(request):
+    if request.method == 'POST':
+        data = request.POST
+        id = data['id']
+        discription = data['discription']
+        time = data['time']
+        date = data['date']
+
+        print(id,discription, time, date)
+    
+    return JsonResponse({'data':'success'})
+
+
+def book_ap(request):
+    patient_id = request.GET['id']
+
+    if patient_id :
+        btn = BookAppointment.objects.get(id=patient_id)
+        btn.is_pending = False
+
+        btn.save()
+    
+    return JsonResponse({'statuc': f'done :{patient_id}'})

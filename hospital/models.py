@@ -62,3 +62,15 @@ class BlogModel(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+
+class BookAppointment(models.Model):
+    doctor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='doctor_appoint')
+    patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='patient_appoint')
+    # profile = models.OneToOneField(UserProfileModel, on_delete)
+    apppoint_date = models.DateField()
+    appoint_time = models.TimeField()
+    discription = models.TextField()
+    is_pending = models.BooleanField(default=True)
+
+    def __str__(self): 
+        return f'{self.patient} -> {self.doctor}'

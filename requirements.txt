@@ -1,3 +1,7 @@
 Django==4.0.4
 whitenoise==6.0.0
 pillow==6.1.0
+google-api-python-client
+psycopg2-binary
+django-environ
+django-widget-tweaks

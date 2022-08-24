@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserProfileModel, BlogModel
+from .models import UserProfileModel, BlogModel, BookAppointment
 
 
 # Register your models here.
@@ -16,3 +16,7 @@ class BlogModelAdmin(admin.ModelAdmin):
     search_fields = ['user', 'title','slug', 'category',  'modified_at', 'updated_at', 'is_draft', 'is_published']
     
     # prepopulated_fields = {"slug": ("tle",)}
+
+@admin.register(BookAppointment)
+class BlogModelAdmin(admin.ModelAdmin):
+    list_display = ['doctor', 'patient', 'apppoint_date', 'appoint_time']
